@@ -8,3 +8,5 @@ dentro dele, rodar git init
 dentro dele, rodar também git remote add <alias> <url do seu repositorio no github>
 
 
+Instalação da interface de linha de comando do Travis-CI (procedimento): 
+https://github.com/travis-ci/travis.rb#installation
