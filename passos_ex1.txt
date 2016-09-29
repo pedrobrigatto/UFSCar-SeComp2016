@@ -10,3 +10,13 @@ dentro dele, rodar também git remote add <alias> <url do seu repositorio no git
 
 Instalação da interface de linha de comando do Travis-CI (procedimento): 
 https://github.com/travis-ci/travis.rb#installation
+
+
+Criando uma aplicação Vaadin usando Maven
+
+mvn -B archetype:generate -DarchetypeGroupId=com.vaadin -DarchetypeArtifactId=vaadin-archetype-application -DarchetypeVersion=7.7.3 -DgroupId=org.test -DartifactId=vaadin-app -Dversion=1.0-SNAPSHOT
+
+group ID: br.ufscar.dc.secomp
+artifact ID: vaadin-app
+
+
