@@ -1,3 +1,10 @@
 
 
-1. mvn archetype:generate -DarchetypeGroupId=org.apache.maven.archetypes -DarchetypeArtifactId=maven-archetype-quickstart -DarchetypeVersion=LATEST
+mvn archetype:generate -DarchetypeGroupId=org.apache.maven.archetypes -DarchetypeArtifactId=maven-archetype-quickstart -DarchetypeVersion=LATEST
+
+entrar no diretório do projeto gerado 
+
+dentro dele, rodar git init 
+dentro dele, rodar também git remote add <alias> <url do seu repositorio no github>
+
+
