@@ -1,0 +1,75 @@
+---------------------------------------------------------------------------------------------------------------------------------
+Step 04 - CI with Jenkins using OpenShift
+---------------------------------------------------------------------------------------------------------------------------------
+
+Pre-req: an active Openshift account
+
+---------------------------------------------------------------------------------------------------------------------------------
+
+1. Create a separate directory to save your OpenShift projects (in the same level as the Java projects). Example:
+	- SeCompDevOpsCourse
+		|_ Projects
+		|_ OpenShift
+
+2. Log in to Openshift with your user, using the command line interface (rhc)
+	rhc setup -l <username>
+3. Create an app using the CLI (rhc)
+   
+   rhc create-app secompjenkins jenkins-1 "https://cartreflect-claytondev.rhcloud.com/reflect?github=majecek/openshift-community-git-ssh"
+
+   User: admin
+   Password: m3-qFrXkXQkQ
+
+	URL:        http://secompjenkins-secompufscar.rhcloud.com/
+	SSH to:     57xxx2f776******00006e@secompjenkins-secompufscar.rhcloud.com
+	Git remote: ssh://57xxx2f776******00006e@secompjenkins-secompufscar.rhcloud.com/~/git/secompjenkins.git/
+
+4. Make sure SSH works (example: ssh 57xxx2f776******00006e@secompjenkins-secompufscar.rhcloud.com) --> from Git Bash!
+5. Make sure application is deployed (navigate to https://secompjenkins-secompufscar.rhcloud.com/manage and log in)
+6. From Jenkins, in the web browser, navigate to 'Manage Jenkins' > 'Script console' and fix the download service
+    6.1. In the text area, paste the 4 lines below and run it
+ 
+    hudson.model.DownloadService.signatureCheck = false 
+    hudson.model.DownloadService.Downloadable.all().each { it.updateNow() }  
+    hudson.model.DownloadService.signatureCheck = true 
+    return
+
+7. JDK Setup (Oracle account required) -> Configure, in Jenkins (Manage Jenkins > Configure System), an JDK 8 automatic installer
+8. Maven setup --> Configure, in Jenkins (Manage Jenkins > Configure System) , an Maven 3+ automatic installer
+9. Git setup --> Configure, in Jenkins (Manage Jenkins > Configure System), a Git automatic installer
+10. Set, in Jenkins (Manage Jenkins > Configure System), the number of executors (# of executors) to 1
+
+11. In Jenkins, add a new item (a.k.a. 'New job') to clean the project (secomp_clean) with the following information:
+	Git URL: <your git repository> (example: https://github.com/pedrobrigatto/ufscar_secomp_2016_exercise01.git)
+	branch master
+  Add a build step of type 'Invoke top-level Maven targets'
+    . select the Maven installer you've created
+    . set, as Maven goal, the value 'clean'
+  Add a post-build action, of type Build other projects, and set the value 'secomp_compile' to it
+	
+12. New job to compile the project (secomp_compile)
+	Git URL: <your git repository> (example: https://github.com/pedrobrigatto/ufscar_secomp_2016_exercise01.git)
+	branch master
+  Add a build step of type 'Invoke top-level Maven targets'
+    . select the Maven installer you've created
+    . set, as Maven goal, the value 'compile'
+	Add a post-build action, of type Build other projects, and set the value 'secomp_test' to it
+
+13. New job to unit test the project (secomp_test)
+	Git URL: <your git repository> (example: https://github.com/pedrobrigatto/ufscar_secomp_2016_exercise01.git)
+	branch master
+  Add a build step of type 'Invoke top-level Maven targets'
+    . select the Maven installer you've created
+    . set, as Maven goal, the value 'test'
+  Add a post-build action, of type Build other projects, and set the value 'secomp_package' to it
+	
+14. New job to unit package the project (secomp_package)
+	Git URL: <your git repository> (example: https://github.com/pedrobrigatto/ufscar_secomp_2016_exercise01.git)
+	branch master
+  Add a build step of type 'Invoke top-level Maven targets'
+    . select the Maven installer you've created
+    . set, as Maven goal, the value 'package'
+    . Click on the 'Advanced' button for this built step, and add the following line to the properties text area: 
+      skipTests=true
+
+15. Run the first job and observe the flow (all jobs should be run in sequentially)
