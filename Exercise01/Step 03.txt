@@ -1,0 +1,88 @@
+--------------------------------------------------------------------------------
+Step 03 - Adding unit tests to the project
+--------------------------------------------------------------------------------
+
+1. Update dependency to JUnit, version 4.12 (in pom.xml, inside <dependencies></dependencies>)
+  Use this dependency block as reference: 
+  
+    <dependency>
+        <groupId>junit</groupId>
+        <artifactId>junit</artifactId>
+        <version>4.11</version>
+    </dependency>
+
+2. Add spring-test dependency (pom.xml)
+
+    <dependency>
+    	<groupId>org.springframework</groupId>
+    	<artifactId>spring-test</artifactId>
+    	<version>4.3.2.RELEASE</version>
+    </dependency>
+
+3. Create, under src/main/java, package 'br.ufscar.secomp', a class called 'AppConfig.java', with the following content: 
+
+package br.ufscar.dc.secomp;
+
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
+
+@Configuration
+@ComponentScan ( basePackages = "br.ufscar.dc.secomp.business.impl")
+public class AppConfig {
+}
+
+This class is important to the unit tests, for DI purposes (auto-wiring)
+
+4. Create, under src/test/java, the package br.ufscar.dc.secomp.business.impl
+5. Create a class CalculatorTest under this package, with the following content: 
+
+package br.ufscar.dc.secomp.business.impl;
+
+import static org.junit.Assert.assertTrue;
+
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+
+import br.ufscar.dc.secomp.AppConfig;
+import br.ufscar.dc.secomp.business.Calculator;
+import br.ufscar.dc.secomp.business.exceptions.InvalidDenominatorException;
+
+@RunWith (SpringJUnit4ClassRunner.class)
+@ContextConfiguration (classes = {AppConfig.class})
+public class CalculatorTest {
+	
+	@Autowired
+	private Calculator calculator;
+
+	@Test
+	public void testSum() {
+		assertTrue(10d == calculator.sum(1.0, 3.0, 6.0).doubleValue());
+	}
+	
+	@Test
+	public void testSubtraction() {
+		assertTrue(10d == calculator.sub(20.0, 10.0).doubleValue());
+	}
+	
+	@Test
+	public void testDivision() throws InvalidDenominatorException {
+		assertTrue(10d == calculator.divide(100.0, 10.0).doubleValue());
+	}
+	
+	@Test (expected = InvalidDenominatorException.class)
+	public void testDivisionByZero() throws InvalidDenominatorException {
+		assertTrue(10d == calculator.divide(100.0, 0.0).doubleValue());
+	}
+	
+	@Test
+	public void testMultiplication() {
+		assertTrue(100.0 == calculator.multiply(10.0, 10.0));
+	}
+}
+
+6. Execute the unit tests
+7. Install EclEmma in Eclipse (from Help > Eclipse Marketplace, search for 'EclEmma' and install it)
+8. Run coverage (select the project, right click, then "Coverage as" > "Java application" and verify results)
