@@ -1,0 +1,52 @@
+--------------------------------------------------------------------------------
+Step 1 - creating Git repository and adding a Maven project to it
+--------------------------------------------------------------------------------
+
+Pre-req 01: Git command line interface installed (Git Bash, Git Shell, ...)
+Pre-req 02: JDK installed (JDK 8)
+Pre-req 03: Maven installed (latest is recommended, but can be any Maven 3 distro)
+
+
+1. Create a GitHub repository (public)
+	Name: ufscar_secomp_2016_exercise01
+	Description: Primeiro exercício do minicurso de DevOps da SeComp 2016
+2. Open Command Prompt (cmd)
+3. Create directory somewhere called 'SeComp-UFSCar-2016' (mkdir)
+4. Enter this directory (cd)
+5. Create a new Maven project, using the quickstart archetype
+
+	mvn archetype:generate 
+	  -DarchetypeGroupId=org.apache.maven.archetypes 
+	  -DarchetypeArtifactId=maven-archetype-quickstart 
+	  -DarchetypeVersion=LATEST
+	
+	Group ID: br.ufscar.dc.secomp
+	Artifact ID: simple-java
+	Default to the rest of the parameters
+
+6. Open Git Bash
+7. Go to the project (simple-java)
+8. Init the repository (git init)
+9. Set up remote
+	git remote add secomp-ex1 https://github.com/pedrobrigatto/ufscar_secomp_2016_exercise01.git
+10. Verify remote repository is listed (git remote)
+11. Fetch this repository (git fetch secomp-ex1)
+
+	NOTE: Basic Git commands used in a daily basis:
+
+	git push 
+	git pull 
+	git fetch
+
+12. Download content from the repository (git pull secomp-ex1 master)
+11. Put project under revision control (git add .)
+12. Commit first version of the project (git commit -m "Adicionando projeto ao repositorio")
+13. Push content to the GitHub repository (git push -u secomp-ex1 master)
+14. Confirm everything is pushed to the remote repository by checking the account in a web browser
+
+Good references to look at (for clarification and as further documentation):
+
+	https://dzone.com/refcardz/getting-started-git
+	https://dzone.com/refcardz/getting-started-subversion
+	https://www.mercurial-scm.org/wiki/QuickStart
+	http://nvie.com/posts/a-successful-git-branching-model/
