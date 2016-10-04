@@ -1,4 +1,4 @@
-# guide_secomp
+# SeComp VII - UFSCar - 29/07/2016
 
 DevOps
   Dev - Development
