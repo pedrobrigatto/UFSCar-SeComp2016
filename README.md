@@ -4,6 +4,12 @@
   . Dev - Development
   . Ops - Operations
   
+Repositórios de referência: 
+
+- Exercício 1: https://github.com/pedrobrigatto/ufscar_secomp_2016_exercise01
+- Exercise 2: https://github.com/pedrobrigatto/ufscar_secomp_2016-base
+- Live exercise (made in the event): https://github.com/pedrobrigatto/vaadin-app  
+  
 Pontos principais: 
   - 'Shift' cultural / postura / atitude (princípios do manifesto ágil muito úteis neste contexto)
   - Automatização de tarefas repetitivas
