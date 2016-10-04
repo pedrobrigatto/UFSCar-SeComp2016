@@ -1,0 +1,141 @@
+---------------------------------------------------------------------------------------------------------------------------------
+Step 07 - Static Analysis with Sonar Qube
+---------------------------------------------------------------------------------------------------------------------------------
+
+1. Go to the OpenShift projects directory in a Git Bash window (or a Terminal, if you are using a Unix-based system)
+2. Run this command: rhc app-create secompsonar diy-0.1 postgresql-9.2
+3. Take notes of the credentials and URL informed in the end of the operation (save somewhere to use it later)
+
+Example of this rhc command output:
+
+  PostgreSQL 9.2 database added.  Please make note of these credentials:
+
+    Root User: adminklzdkbi
+    Root Password: 6U4TYszt5j4x
+    Database Name: secompsonar
+
+    Connection URL: postgresql://$OPENSHIFT_POSTGRESQL_DB_HOST:$OPENSHIFT_POSTGRESQL_DB_PORT
+
+    URL:        http://secompsonar-secompufscar.rhcloud.com/
+    SSH to:     57e58ad9abcde145fb000025@secompsonar-secompufscar.rhcloud.com
+    Git remote: ssh://57e58ad9abcde145fb000025@secompsonar-secompufscar.rhcloud.com/~/git/secompsonar.git/
+
+4. Enter the project created by the rhc command (cd secompsonar)
+4. Replace current project by the one available in https://github.com/worldline/openshift-sonarqube/. Use the commands below:
+
+	git rm -r diy .openshift misc README.md
+	git remote add upstream -m master https://github.com/worldline/openshift-sonarqube.git
+	git pull -s recursive -X theirs upstream master
+	
+	Add a comment to the merge and confirm the operation (to save the merge comment in this vi window, type ESC followed by 
+  :wq, then hit ENTER)
+
+5. Change the .openshift/action_hooks/build script to fix the URL, which is incorrect (Git Bash)
+	5.1. Change the min. version to 4.1.2 as 4.1.1 is unavailable
+	5.2. Change the base URL in the wget command from wget http://dist.sonar.codehaus.org/sonarqube-$SONAR_VERSION.zip 
+	     to http://downloads.sonarsource.com/sonarqube/sonarqube-$SONAR_VERSION.zip
+	
+6. Commit the changes
+
+  git add . 
+  git commit -m "Fixing the URL of the Sonar Qube download page)
+
+7. Push the content to the repository (in the Openshift gear)
+
+  git push -u origin master
+  
+  The output in the terminal should be something like below:
+
+    remote: Git Post-Receive Result: success
+    remote: Activation status: success
+    remote: Deployment completed with status: success
+    To ssh://57e58ad9abcde145fb000025@secompsonar-secompufscar.rhcloud.com/~/git/secompsonar.git/
+       7a6ac9a..3944e96  master -> master
+
+6. Open Sonar using the URL informed in the Openshift Dashboard
+   Take as example of Jenkins SSH 'path' the following: 57e582xxxx28e196c300006e@secompjenkins-secompufscar.rhcloud.com
+
+7. SSH to Jenkins (ssh 57e582xxxx28e196c300006e@secompjenkins-secompufscar.rhcloud.com)
+8. Confirm a directory '$OPENSHIFT_DATA_DIR/git-ssh' exists. 
+   This directory is key to let us make gears communicate to one another via SSH.
+9. From the Jenkins gear, SSH to the Sonar gear:
+	ssh -i $OPENSHIFT_DATA_DIR/git-ssh/id_rsa -o "UserKnownHostsFile=$OPENSHIFT_DATA_DIR/git-ssh/known_hosts" 57e58ad97628e145fb000025@secompsonar-secompufscar.rhcloud.com
+	
+  At this point, the Sonar gear is added to the list of known hosts of the Jenkins gear. This is an important step in the 
+  'pre-setup' of the SSH communication, used later when a Jenkins job is set.
+  
+10. Install SonarQube plug-in on Jenkins
+11. Restart Jenkins to apply the configuration made in step 10
+12. When Jenkins is back, add a SonarQube server configuration on Jenkins
+	
+	Name: SonarQube
+	URL: http://secompsonar-secompufscar.rhcloud.com/
+	Version: 5.1 or lower
+	Account login: admin 
+	Password: admin
+	
+	Click on Advanced to configure the DB
+	
+	Database URL: jdbc:postgresql://$OPENSHIFT_JENKINS_IP:15555/secompsonar
+	Database login: adminklzdkbi
+	Database password: 6U4TYszt5j4x
+
+13. Add a SonarQube Scanner configuration to Jenkins
+14. Save the work 
+
+15. Create a job called 'secomp_analysis'
+
+16. Build step 1: clean install, Maven goal. Make sure you skip the tests (just to make it quicker, real world may consider everything).
+17. Build step 2: shell, with the following content (make sure the SSH information is correct): 
+
+	# Make sure Tunnel for Sonar is open
+	# Find out IP and port of DB
+	OPENSHIFT_POSTGRESQL_DB_HOST_N_PORT=$(ssh -i $OPENSHIFT_DATA_DIR/git-ssh/id_rsa -o "UserKnownHostsFile=$OPENSHIFT_DATA_DIR/git-ssh/known_hosts" 57e58ad97628e145fb000025@secompsonar-secompufscar.rhcloud.com '(echo `printenv OPENSHIFT_POSTGRESQL_DB_HOST`:`printenv OPENSHIFT_POSTGRESQL_DB_PORT`)')
+	# Open tunnel to DB
+	BUILD_ID=dontKillMe nohup ssh -i $OPENSHIFT_DATA_DIR/git-ssh/id_rsa -o "UserKnownHostsFile=$OPENSHIFT_DATA_DIR/git-ssh/known_hosts" -L $OPENSHIFT_JENKINS_IP:15555:$OPENSHIFT_POSTGRESQL_DB_HOST_N_PORT -N 57e58ad97628e145fb000025@secompsonar-secompufscar.rhcloud.com &
+	
+18. Build step 3: run the SonarQube analysis
+
+	Task to run: nothing 
+	JDK: select the JDK configured on Jenkins
+	Path to project properties: leave empty
+
+	Analysis Properties:
+
+		# must be unique in a given SonarQube instance
+		sonar.projectKey=br.ufscar.dc.secomp:simple-java
+
+		# this is the name and version displayed in the SonarQube UI. Was mandatory prior to SonarQube 6.1.
+		sonar.projectName=simple-java
+		sonar.projectVersion=0.1.0
+		 
+		# Path is relative to the sonar-project.properties file. Replace "\" by "/" on Windows.
+		# Since SonarQube 4.2, this property is optional if sonar.modules is set. 
+		# If not set, SonarQube starts looking for source code from the directory containing 
+		# the sonar-project.properties file.
+		sonar.sources=$OPENSHIFT_DATA_DIR/workspace/secomp_analysis/src/main/java
+		 
+		# Encoding of the source code. Default is default system encoding
+		sonar.sourceEncoding=UTF-8		
+		
+19. Save the work
+
+20. SSH the Sonar gear
+21. Create the directory '/tmp/sonar_workdir'
+22. Change mode of this directory allowing any user to write to it (example: chmod 775 or 755)
+
+23. Before running, SSH to the Sonar gear FROM the Jenkins gear
+	20.1. ssh 57e582f77628e196c300006e@secompjenkins-secompufscar.rhcloud.com
+	20.2. ssh -i $OPENSHIFT_DATA_DIR/git-ssh/id_rsa -o "UserKnownHostsFile=$OPENSHIFT_DATA_DIR/git-ssh/known_hosts" 57e58ad97628e145fb000025@secompsonar-secompufscar.rhcloud.com
+
+21. Run the job sonar_analysis
+22. Go to the Sonar page and check the analysis
+
+References/further reading:
+
+		- http://www.sonarqube.org/downloads/
+		- http://downloads.sonarsource.com/sonarqube/sonarqube-4.1.2.zip
+    - https://github.com/worldline/openshift-sonarqube
+    - Alternative to the approach I took: https://github.com/wenhao/openshift-sonar
+    - http://www.sonarlint.org/eclipse/
+    - http://docs.sonarqube.org/display/SCAN/Analyzing+with+SonarQube+Scanner+for+Jenkins
