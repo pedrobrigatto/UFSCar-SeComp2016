@@ -1,6 +1,6 @@
 -----------------------------------------------------------------------------------------------------------------------------------
 Step 06 - Creating and setting an SSH key in the Openshift account
------------------------------------------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------------------------------------
 
 01. Open Git Bash (on Windows, as the command prompt is buggy) or a Terminal in Unix-based systems (Linux, MacOS)
 02. Go to the Openshift 'Projects' directory created some steps ago
@@ -10,3 +10,9 @@ Step 06 - Creating and setting an SSH key in the Openshift account
 06. As passphrase, make sure you DON'T TYPE ANYTHING, just hit ENTER (it will be an empty passphrase)
 07. Copy the public key (cat id_rsa.pub , copy it)
 08. Add this key in https://openshift.redhat.com/app/console/keys/new (give it the name 'secomp')
+
+----------------------------------------------------------------------------------------------------------------------------------
+Why is this important?
+----------------------------------------------------------------------------------------------------------------------------------
+
+The configuration of a SSH key like listed above is important to make the communication between 2 gears of your Openshift account happen.
