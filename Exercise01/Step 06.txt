@@ -1,0 +1,18 @@
+-----------------------------------------------------------------------------------------------------------------------------------
+Step 06 - Creating and setting an SSH key in the Openshift account
+----------------------------------------------------------------------------------------------------------------------------------
+
+01. Open Git Bash (on Windows, as the command prompt is buggy) or a Terminal in Unix-based systems (Linux, MacOS)
+02. Go to the Openshift 'Projects' directory created some steps ago
+03. Connect to the Jenkins gear using using SSH (example: ssh 57e582f77xcsfardss6e@secompjenkins-secompufscar.rhcloud.com)
+04. Move to the $OPENSHIFT_DATA_DIR/git-ssh directory
+05. Generate SSH key (ssh-keygen -t rsa -b 4096) and confirm the current directory as path to save the id_rsa file (./id_rsa)
+06. As passphrase, make sure you DON'T TYPE ANYTHING, just hit ENTER (it will be an empty passphrase)
+07. Copy the public key (cat id_rsa.pub , copy it)
+08. Add this key in https://openshift.redhat.com/app/console/keys/new (give it the name 'secomp')
+
+----------------------------------------------------------------------------------------------------------------------------------
+Why is this important?
+----------------------------------------------------------------------------------------------------------------------------------
+
+The configuration of a SSH key like listed above is important to make the communication between 2 gears of your Openshift account happen.

@@ -1,0 +1,20 @@
+---------------------------------------------------------------------------------------------------------------------------------
+Step 05. GitHub web hook configuration 
+---------------------------------------------------------------------------------------------------------------------------------
+
+01. Go to your Jenkins administration page (open it in a web browser)
+02. Go to Jenkins > Manage Jenkins > Configure Global Security
+03. Change the permissions of the anonymous user to administer Jenkins (experimental, we should be more granular in real life)
+17. Go to the job 'secomp_clean' and set a token to it, as a build trigger ('secomp_ci')
+18. Take notes of the URL to be used by the GitHub web hook (example: https://secompjenkins-secompufscar.rhcloud.com/job/secomp_clean/build?token=secomp_ci)
+19. Go to your GitHub repository and click on Settings > WebHooks
+20. Click on Add webhook
+21. Inform the URL from step 16 in the field 'Payload URL'
+22. Edit the README file, adding anything (just to have some changes to commit)
+23. Submit the changes to the GitHub repository (using git add > git commit > git push with the required parameter)
+24. Verify the Jenkins flow is started from this commit
+
+References that may help on this: 
+
+	- https://developers.openshift.com/getting-started/windows.html
+	- https://developer.github.com/webhooks/

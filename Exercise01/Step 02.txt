@@ -1,0 +1,175 @@
+--------------------------------------------------------------------------------
+Step 02 - Loading project in Eclipse and coding it
+--------------------------------------------------------------------------------
+
+1. Import Maven project into Eclipse
+2. Add the Spring Context dependency in your project (pom.xml)  
+  This dependency must be inside the <dependencies></dependencies> block
+  Follow, as reference, documentation on this page: https://projects.spring.io/spring-framework/
+2. Add new package to the project (suggestion: br.ufscar.dc.secomp.business)
+3. Add new interface in this package, called 'Calculator'
+4. Add the following code to this interface
+
+package br.ufscar.dc.secomp.business;
+
+import br.ufscar.dc.secomp.business.exceptions.InvalidDenominatorException;
+
+public interface Calculator {
+	
+	String SUM = "+";
+	String SUBTRACTION = "-";
+	String MULTIPLICATION = "*";
+	String DIVISION = "/";
+	
+	Double sum(Double ... portions);
+	
+	Double sub (Double portion1, Double portion2);
+	
+	Double multiply (Double factor1, Double factor2);
+	
+	Double divide (Double numerator, Double denominator) throws InvalidDenominatorException;
+}
+
+5. Add the package 'br.ufscar.dc.secomp.business.exceptions' to the project
+6. Create a class called 'InvalidDenominatorException' in this package, with the following content: 
+
+package br.ufscar.dc.secomp.business.exceptions;
+
+public class InvalidDenominatorException extends Exception {
+
+	private static final long serialVersionUID = 1285912095323031190L;
+
+	public InvalidDenominatorException(String message) {
+		super(message);
+	}
+}
+
+7. Add new package to the project, 'br.ufscar.dc.secomp.business.impl'
+8. Add new class, called to the 'CalculatorImpl' package impl
+9. Add the following code to this class: 
+
+package br.ufscar.dc.secomp.business.impl;
+
+import org.springframework.stereotype.Component;
+
+import br.ufscar.dc.secomp.business.Calculator;
+import br.ufscar.dc.secomp.business.exceptions.InvalidDenominatorException;
+
+@Component
+public class CalculatorImpl implements Calculator {
+
+	public Double sum(Double... portions) {
+		Double sum = 0.0;
+		for (Double portion : portions) {
+			sum += portion;
+		}
+		return sum;
+	}
+
+	public Double sub(Double portion1, Double portion2) {
+		return portion1 - portion2;
+	}
+
+	public Double multiply(Double factor1, Double factor2) {
+		return factor1 * factor2;
+	}
+
+	public Double divide(Double numerator, Double denominator) throws InvalidDenominatorException {
+		if (denominator == 0.0) {
+			throw new InvalidDenominatorException("O denominador de uma divisão não pode ser 0");
+		}
+		return numerator / denominator;
+	}
+}
+
+10. Complete the class App.java as follows (this uses Spring Boot, which is not covered in details in this course): 
+
+package br.ufscar.dc.secomp;
+
+import java.util.Scanner;
+
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
+
+import br.ufscar.dc.secomp.business.Calculator;
+import br.ufscar.dc.secomp.business.exceptions.InvalidDenominatorException;
+
+@Configuration
+@ComponentScan (basePackages = { "br.ufscar.dc.secomp.business.impl" })
+public class App {
+
+	private static Scanner scanner = new Scanner(System.in);
+	private static ApplicationContext context;
+
+	public static void main( String[] args ) throws InvalidDenominatorException {
+		context = new AnnotationConfigApplicationContext(App.class);
+		System.out.println("------------------------------------------------------------------");
+		System.out.println("Hi, I'm the calculator. I can perform the following operations:");
+		System.out.println("\r\n\t+ : Sum\r\n\t- : Subtraction\r\n\t* : Multiplication\r\n\t/ : Division");
+		System.out.println("Now tell me: what operation do you want to run? ");
+		String operation = scanner.next().trim();
+
+		if (Calculator.SUM.equals(operation)) {
+			executeSum();
+		} else if (Calculator.SUBTRACTION.equals(operation)) {
+			executeSubtration();
+		} else if (Calculator.MULTIPLICATION.equals(operation)) {
+			executeMultiplication();
+		} else if (Calculator.DIVISION.equals(operation)) {
+			executeDivision();
+		} else {
+			System.out.println("This operation is not supported.");
+		}
+	}
+
+	private static void executeSum() {
+		System.out.println("Alright, a sum ... tell me the first portion of it: ");
+		Double portion1 = scanner.nextDouble();
+		System.out.println("OK, got it ... now the second portion: ");
+		Double portion2 = scanner.nextDouble();
+		System.out.println(portion1 + " + " + portion2 + " = " + 
+				context.getBean(Calculator.class).sum(portion1, portion2));
+	}
+
+	private static void executeSubtration() {
+		System.out.println("Alright, a subtration ... tell me the first portion of it: ");
+		Double portion1 = scanner.nextDouble();
+		System.out.println("OK, got it ... now the second portion: ");
+		Double portion2 = scanner.nextDouble();
+		System.out.println(portion1 + " - " + portion2 + " = " + 
+				context.getBean(Calculator.class).sub(portion1, portion2));
+	}
+
+	private static void executeMultiplication() {
+		System.out.println("Alright, a multiplication ... tell me the first factor of it: ");
+		Double portion1 = scanner.nextDouble();
+		System.out.println("OK, got it ... now the second factor: ");
+		Double portion2 = scanner.nextDouble();
+		System.out.println(portion1 + " * " + portion2 + " = " + 
+				context.getBean(Calculator.class).multiply(portion1, portion2));
+	}
+
+	private static void executeDivision() throws InvalidDenominatorException {
+		System.out.println("Alright, a division ... tell me the numerator: ");
+		Double numerator = scanner.nextDouble();
+		System.out.println("OK, got it ... now the denominator (> 0): ");
+		Double denominator = scanner.nextDouble();
+		System.out.println(numerator + " / " + denominator + " = " + 
+				context.getBean(Calculator.class).divide(numerator,  denominator));
+	}	
+}
+
+11. Push the content to the repository (Git Bash)
+	git add . 
+	git commit -m "Subindo codigo-fonte do projeto para o repositorio remoto"
+	git push -u secomp-ex1 master
+
+12. Verify the code is available in the GitHub account (web browser)
+
+------------------------------------------------------------------------------------------------------------------------------
+IMPORTANT: you don't have to understand what the code does, in depth, as Spring Boot is not covered in details in this course. 
+This is a Java application that runs fine, which is everything we need to talk about the tools and processes under a 
+'DevOps process'.
+------------------------------------------------------------------------------------------------------------------------------
