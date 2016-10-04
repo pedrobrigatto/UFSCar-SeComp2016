@@ -1,8 +1,8 @@
 # SeComp VII - UFSCar - 29/07/2016
 
-DevOps
-  Dev - Development
-  Ops - Operations
+- DevOps
+  . Dev - Development
+  . Ops - Operations
   
 Pontos principais: 
   - 'Shift' cultural / postura / atitude (princípios do manifesto ágil muito úteis neste contexto)
