@@ -1,0 +1,389 @@
+{\rtf1\ansi\ansicpg1252\cocoartf1348\cocoasubrtf170
+{\fonttbl\f0\fswiss\fcharset0 Helvetica;\f1\fnil\fcharset0 Monaco;}
+{\colortbl;\red255\green255\blue255;\red0\green61\blue204;\red127\green0\blue85;\red100\green100\blue100;
+\red0\green0\blue192;\red106\green62\blue62;}
+{\info
+{\author Pedro E. Cunha Brigatto}}\margl1440\margr1440\vieww16920\viewh10540\viewkind0
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural
+
+\f0\fs48 \cf0 Activity 04: Preparing the data model\
+
+\fs24 \
+Pre-req 01: 
+\b Activity 03
+\b0  completed\
+\
+1. In the project, under \cf2 src/main/java\cf0 , select the base package created in 
+\b Activity 01 
+\b0 (Example: br.com.ufscar.secomp.devopsday)\
+2. Create a new package by right-clicking the mouse and selecting New > Package\
+3. Give it the name \cf2 model\cf0  (Example: \cf2 br.com.ufscar.secomp.devopsday
+\b .model
+\b0 \cf0 )\
+4. Save the work\
+5. Select the package model and right-click the mouse\
+6. Create a new class by selecting  
+\b New > Class
+\b0 \
+7. Give it the name 
+\b \cf2 DomainObject
+\b0 \cf0  and fill it with this content: \
+\
+\pard\pardeftab720
+
+\f1\fs22 \cf3 import\cf0  java.io.Serializable;\
+\
+\cf3 import\cf0  javax.persistence.GeneratedValue;\
+\cf3 import\cf0  javax.persistence.GenerationType;\
+\cf3 import\cf0  javax.persistence.Id;\
+\cf3 import\cf0  javax.persistence.MappedSuperclass;\
+\
+\pard\pardeftab720
+\cf4 @MappedSuperclass\cf0 \
+\pard\pardeftab720
+\cf3 public\cf0  \cf3 class\cf0  DomainObject \cf3 implements\cf0  Serializable \{\
+\
+	\cf3 private\cf0  \cf3 static\cf0  \cf3 final\cf0  \cf3 long\cf0  \cf5 serialVersionUID\cf0  = 6276312463361395392L;\
+	\
+	\cf3 private\cf0  Long \cf5 id\cf0 ;\
+	\
+	\cf3 public\cf0  DomainObject() \{\}\
+\
+	\cf4 @Id\cf0 \
+	\cf4 @GeneratedValue\cf0  (strategy = GenerationType.\cf5 AUTO\cf0 )\
+	\cf3 public\cf0  Long getId() \{\
+		\cf3 return\cf0  \cf5 id\cf0 ;\
+	\}\
+\
+	\cf3 public\cf0  \cf3 void\cf0  setId(Long \cf6 id\cf0 ) \{\
+		\cf3 this\cf0 .\cf5 id\cf0  = \cf6 id\cf0 ;\
+	\}\
+\}
+\f0\fs24 \
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural
+\cf0 \
+8. Save the work.\
+\
+9. Create another class called 
+\b Speaker
+\b0  and add the following content. Save the work.\
+\
+\pard\pardeftab720
+
+\f1\fs22 \cf3 import\cf0  javax.persistence.Column;\
+\cf3 import\cf0  javax.persistence.Entity;\
+\
+\pard\pardeftab720
+\cf4 @Entity\cf0 \
+\pard\pardeftab720
+\cf3 public\cf0  \cf3 class\cf0  Speaker \cf3 extends\cf0  DomainObject \{\
+\
+	\cf3 private\cf0  \cf3 static\cf0  \cf3 final\cf0  \cf3 long\cf0  \cf5 serialVersionUID\cf0  = -72183063540821040L;\
+	\
+	\cf3 private\cf0  String \cf5 name\cf0 ;\
+	\cf3 private\cf0  String \cf5 miniBio\cf0 ;\
+	\
+	\cf3 public\cf0  Speaker(String \cf6 name\cf0 ) \{\
+		\cf3 super\cf0 ();\
+		\cf3 this\cf0 .\cf5 name\cf0  = \cf6 name\cf0 ;\
+	\}\
+\
+	\cf4 @Column\cf0  (unique = \cf3 true\cf0 )\
+	\cf3 public\cf0  String getName() \{\
+		\cf3 return\cf0  \cf5 name\cf0 ;\
+	\}\
+\
+	\cf3 public\cf0  \cf3 void\cf0  setName(String \cf6 name\cf0 ) \{\
+		\cf3 this\cf0 .\cf5 name\cf0  = \cf6 name\cf0 ;\
+	\}\
+\
+	\cf3 public\cf0  String getMiniBio() \{\
+		\cf3 return\cf0  \cf5 miniBio\cf0 ;\
+	\}\
+\
+	\cf3 public\cf0  \cf3 void\cf0  setMiniBio(String \cf6 miniBio\cf0 ) \{\
+		\cf3 this\cf0 .\cf5 miniBio\cf0  = \cf6 miniBio\cf0 ;\
+	\}\
+\}
+\f0\fs24 \
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural
+\cf0 \
+10. Create another class called 
+\b Attendee
+\b0  and add the following content. Save the work.\
+\
+\pard\pardeftab720
+
+\f1\fs22 \cf3 import\cf0  javax.persistence.Column;\
+\cf3 import\cf0  javax.persistence.Entity;\
+\
+\pard\pardeftab720
+\cf4 @Entity\cf0 \
+\pard\pardeftab720
+\cf3 public\cf0  \cf3 class\cf0  Attendee \cf3 extends\cf0  DomainObject \{\
+\
+	\cf3 private\cf0  \cf3 static\cf0  \cf3 final\cf0  \cf3 long\cf0  \cf5 serialVersionUID\cf0  = 7760775338969558386L;\
+	\
+	\cf3 private\cf0  String \cf5 name\cf0 ;\
+	\cf3 private\cf0  String \cf5 reference\cf0 ;\
+	\
+	\cf3 public\cf0  Attendee (String \cf6 name\cf0 ) \{\
+		\cf3 this\cf0 .\cf5 name\cf0  = \cf6 name\cf0 ;\
+	\}\
+\
+	\cf4 @Column\cf0  (unique = \cf3 true\cf0 )\
+	\cf3 public\cf0  String getName() \{\
+		\cf3 return\cf0  \cf5 name\cf0 ;\
+	\}\
+\
+	\cf3 public\cf0  \cf3 void\cf0  setName(String \cf6 name\cf0 ) \{\
+		\cf3 this\cf0 .\cf5 name\cf0  = \cf6 name\cf0 ;\
+	\}\
+\
+	\cf3 public\cf0  String getReference() \{\
+		\cf3 return\cf0  \cf5 reference\cf0 ;\
+	\}\
+\
+	\cf3 public\cf0  \cf3 void\cf0  setReference(String \cf6 reference\cf0 ) \{\
+		\cf3 this\cf0 .\cf5 reference\cf0  = \cf6 reference\cf0 ;\
+	\}	\
+\}
+\f0\fs24 \
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural
+\cf0 \
+11. Create another class called 
+\b Session
+\b0  and add the following content. Save the work.\
+\
+\pard\pardeftab720
+
+\f1\fs22 \cf3 import\cf0  java.time.LocalDateTime;\
+\cf3 import\cf0  java.util.List;\
+\
+\cf3 import\cf0  javax.persistence.CascadeType;\
+\cf3 import\cf0  javax.persistence.Entity;\
+\cf3 import\cf0  javax.persistence.FetchType;\
+\cf3 import\cf0  javax.persistence.OneToMany;\
+\
+\pard\pardeftab720
+\cf4 @Entity\cf0 \
+\pard\pardeftab720
+\cf3 public\cf0  \cf3 class\cf0  Session \cf3 extends\cf0  DomainObject \{\
+\
+	\cf3 private\cf0  \cf3 static\cf0  \cf3 final\cf0  \cf3 long\cf0  \cf5 serialVersionUID\cf0  = 7864551895790956927L;\
+	\
+	\cf3 private\cf0  String \cf5 title\cf0 ;\
+	\cf3 private\cf0  String \cf5 description\cf0 ;\
+	\cf3 private\cf0  LocalDateTime \cf5 startingTime\cf0 ;\
+	\cf3 private\cf0  LocalDateTime \cf5 endingTime\cf0 ;\
+	\cf3 private\cf0  Speaker \cf5 speaker\cf0 ;\
+	\cf3 private\cf0  List<Attendee> \cf5 attendees\cf0 ;\
+	\
+	\cf3 public\cf0  Session(String \cf6 title\cf0 , LocalDateTime \cf6 startingTime\cf0 , LocalDateTime \cf6 endingTime\cf0 , Speaker \cf6 speaker\cf0 ) \{\
+		\cf3 super\cf0 ();\
+		\cf3 this\cf0 .\cf5 title\cf0  = \cf6 title\cf0 ;\
+		\cf3 this\cf0 .\cf5 startingTime\cf0  = \cf6 startingTime\cf0 ;\
+		\cf3 this\cf0 .\cf5 endingTime\cf0  = \cf6 endingTime\cf0 ;\
+		\cf3 this\cf0 .\cf5 speaker\cf0  = \cf6 speaker\cf0 ;\
+	\}\
+\
+	\cf3 public\cf0  String getTitle() \{\
+		\cf3 return\cf0  \cf5 title\cf0 ;\
+	\}\
+\
+	\cf3 public\cf0  \cf3 void\cf0  setTitle(String \cf6 title\cf0 ) \{\
+		\cf3 this\cf0 .\cf5 title\cf0  = \cf6 title\cf0 ;\
+	\}\
+\
+	\cf3 public\cf0  String getDescription() \{\
+		\cf3 return\cf0  \cf5 description\cf0 ;\
+	\}\
+\
+	\cf3 public\cf0  \cf3 void\cf0  setDescription(String \cf6 description\cf0 ) \{\
+		\cf3 this\cf0 .\cf5 description\cf0  = \cf6 description\cf0 ;\
+	\}\
+\
+	\cf3 public\cf0  LocalDateTime getStartingTime() \{\
+		\cf3 return\cf0  \cf5 startingTime\cf0 ;\
+	\}\
+\
+	\cf3 public\cf0  \cf3 void\cf0  setStartingTime(LocalDateTime \cf6 startingTime\cf0 ) \{\
+		\cf3 this\cf0 .\cf5 startingTime\cf0  = \cf6 startingTime\cf0 ;\
+	\}\
+\
+	\cf3 public\cf0  LocalDateTime getEndingTime() \{\
+		\cf3 return\cf0  \cf5 endingTime\cf0 ;\
+	\}\
+\
+	\cf3 public\cf0  \cf3 void\cf0  setEndingTime(LocalDateTime \cf6 endingTime\cf0 ) \{\
+		\cf3 this\cf0 .\cf5 endingTime\cf0  = \cf6 endingTime\cf0 ;\
+	\}\
+\
+	\cf3 public\cf0  Speaker getSpeaker() \{\
+		\cf3 return\cf0  \cf5 speaker\cf0 ;\
+	\}\
+\
+	\cf3 public\cf0  \cf3 void\cf0  setSpeaker(Speaker \cf6 speaker\cf0 ) \{\
+		\cf3 this\cf0 .\cf5 speaker\cf0  = \cf6 speaker\cf0 ;\
+	\}\
+\
+	\cf4 @OneToMany\cf0  (cascade = CascadeType.\cf5 ALL\cf0 , \
+			fetch = FetchType.\cf5 LAZY\cf0 , targetEntity = Attendee.\cf3 class\cf0 )\
+	\cf3 public\cf0  List<Attendee> getAttendees() \{\
+		\cf3 return\cf0  \cf5 attendees\cf0 ;\
+	\}\
+\
+	\cf3 public\cf0  \cf3 void\cf0  setAttendees(List<Attendee> \cf6 attendees\cf0 ) \{\
+		\cf3 this\cf0 .\cf5 attendees\cf0  = \cf6 attendees\cf0 ;\
+	\}\
+\}
+\f0\fs24 \
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural
+\cf0 \
+12. Create another class called 
+\b Event
+\b0  and add the following content. Save the work.\
+\
+\pard\pardeftab720
+
+\f1\fs22 \cf3 import\cf0  java.time.LocalDateTime;\
+\cf3 import\cf0  java.util.List;\
+\
+\cf3 import\cf0  javax.persistence.CascadeType;\
+\cf3 import\cf0  javax.persistence.Column;\
+\cf3 import\cf0  javax.persistence.Entity;\
+\cf3 import\cf0  javax.persistence.FetchType;\
+\cf3 import\cf0  javax.persistence.OneToMany;\
+\
+\pard\pardeftab720
+\cf4 @Entity\cf0 \
+\pard\pardeftab720
+\cf3 public\cf0  \cf3 class\cf0  Event \cf3 extends\cf0  DomainObject \{\
+\
+	\cf3 private\cf0  \cf3 static\cf0  \cf3 final\cf0  \cf3 long\cf0  \cf5 serialVersionUID\cf0  = -5598547396016865554L;\
+	\
+	\cf3 private\cf0  String \cf5 name\cf0 ;\
+	\cf3 private\cf0  String \cf5 description\cf0 ;\
+	\cf3 private\cf0  LocalDateTime \cf5 firstDay\cf0 ;\
+	\cf3 private\cf0  LocalDateTime \cf5 lastDay\cf0 ;\
+	\cf3 private\cf0  List<Session> \cf5 sessions\cf0 ;\
+	\
+	\cf3 public\cf0  Event(String \cf6 name\cf0 , LocalDateTime \cf6 firstDay\cf0 , LocalDateTime \cf6 lastDay\cf0 , Speaker \cf6 speaker\cf0 ) \{\
+		\cf3 super\cf0 ();\
+		\cf3 this\cf0 .\cf5 name\cf0  = \cf6 name\cf0 ;\
+		\cf3 this\cf0 .\cf5 firstDay\cf0  = \cf6 firstDay\cf0 ;\
+		\cf3 this\cf0 .\cf5 lastDay\cf0  = \cf6 lastDay\cf0 ;\
+	\}\
+\
+	\cf4 @Column\cf0  (unique = \cf3 true\cf0 )\
+	\cf3 public\cf0  String getName() \{\
+		\cf3 return\cf0  \cf5 name\cf0 ;\
+	\}\
+\
+	\cf3 public\cf0  \cf3 void\cf0  setName(String \cf6 name\cf0 ) \{\
+		\cf3 this\cf0 .\cf5 name\cf0  = \cf6 name\cf0 ;\
+	\}\
+\
+	\cf3 public\cf0  String getDescription() \{\
+		\cf3 return\cf0  \cf5 description\cf0 ;\
+	\}\
+\
+	\cf3 public\cf0  \cf3 void\cf0  setDescription(String \cf6 description\cf0 ) \{\
+		\cf3 this\cf0 .\cf5 description\cf0  = \cf6 description\cf0 ;\
+	\}\
+	\
+	\cf3 public\cf0  LocalDateTime getFirstDay() \{\
+		\cf3 return\cf0  \cf5 firstDay\cf0 ;\
+	\}\
+\
+	\cf3 public\cf0  \cf3 void\cf0  setFirstDay(LocalDateTime \cf6 firstDay\cf0 ) \{\
+		\cf3 this\cf0 .\cf5 firstDay\cf0  = \cf6 firstDay\cf0 ;\
+	\}\
+\
+	\cf3 public\cf0  LocalDateTime getLastDay() \{\
+		\cf3 return\cf0  \cf5 lastDay\cf0 ;\
+	\}\
+\
+	\cf3 public\cf0  \cf3 void\cf0  setLastDay(LocalDateTime \cf6 lastDay\cf0 ) \{\
+		\cf3 this\cf0 .\cf5 lastDay\cf0  = \cf6 lastDay\cf0 ;\
+	\}\
+\
+	\cf4 @OneToMany\cf0  (cascade = CascadeType.\cf5 ALL\cf0 , \
+			fetch = FetchType.\cf5 LAZY\cf0 , targetEntity = Session.\cf3 class\cf0 )\
+	\cf3 public\cf0  List<Session> getSessions() \{\
+		\cf3 return\cf0  \cf5 sessions\cf0 ;\
+	\}\
+\
+	\cf3 public\cf0  \cf3 void\cf0  setSessions(List<Session> \cf6 sessions\cf0 ) \{\
+		\cf3 this\cf0 .\cf5 sessions\cf0  = \cf6 sessions\cf0 ;\
+	\}\
+\}
+\f0\fs24 \
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural
+\cf0 \
+12. Create another class called 
+\b Registration
+\b0  and add the following content. Save the work.\
+\
+\pard\pardeftab720
+
+\f1\fs22 \cf3 import\cf0  java.time.LocalDateTime;\
+\
+\cf3 import\cf0  javax.persistence.Entity;\
+\
+\pard\pardeftab720
+\cf4 @Entity\cf0 \
+\pard\pardeftab720
+\cf3 public\cf0  \cf3 class\cf0  Registration \cf3 extends\cf0  DomainObject \{\
+\
+	\cf3 private\cf0  \cf3 static\cf0  \cf3 final\cf0  \cf3 long\cf0  \cf5 serialVersionUID\cf0  = -5140906509138484515L;\
+	\
+	\cf3 private\cf0  LocalDateTime \cf5 date\cf0 ;\
+	\cf3 private\cf0  Attendee \cf5 attendee\cf0 ;\
+	\cf3 private\cf0  Session \cf5 session\cf0 ;\
+	\
+	\cf3 public\cf0  Registration(LocalDateTime \cf6 date\cf0 , Attendee \cf6 attendee\cf0 , Session \cf6 session\cf0 ) \{\
+		\cf3 super\cf0 ();\
+		\cf3 this\cf0 .\cf5 date\cf0  = \cf6 date\cf0 ;\
+		\cf3 this\cf0 .\cf5 attendee\cf0  = \cf6 attendee\cf0 ;\
+		\cf3 this\cf0 .\cf5 session\cf0  = \cf6 session\cf0 ;\
+	\}\
+\
+	\cf3 public\cf0  LocalDateTime getDate() \{\
+		\cf3 return\cf0  \cf5 date\cf0 ;\
+	\}\
+\
+	\cf3 public\cf0  \cf3 void\cf0  setDate(LocalDateTime \cf6 date\cf0 ) \{\
+		\cf3 this\cf0 .\cf5 date\cf0  = \cf6 date\cf0 ;\
+	\}\
+\
+	\cf3 public\cf0  Attendee getAttendee() \{\
+		\cf3 return\cf0  \cf5 attendee\cf0 ;\
+	\}\
+\
+	\cf3 public\cf0  \cf3 void\cf0  setAttendee(Attendee \cf6 attendee\cf0 ) \{\
+		\cf3 this\cf0 .\cf5 attendee\cf0  = \cf6 attendee\cf0 ;\
+	\}\
+\
+	\cf3 public\cf0  Session getSession() \{\
+		\cf3 return\cf0  \cf5 session\cf0 ;\
+	\}\
+\
+	\cf3 public\cf0  \cf3 void\cf0  setSession(Session \cf6 session\cf0 ) \{\
+		\cf3 this\cf0 .\cf5 session\cf0  = \cf6 session\cf0 ;\
+	\}\
+\}
+\f0\fs24 \
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural
+\cf0 \
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural
+
+\b \cf0 NOTE:
+\b0  At this point, we can\'92t validate the model yet. It should be OK. However, if it needs any fix, we\'92ll get to know it in an upcoming activity.\
+\
+13. Submit the code to the repository\
+	5.1. git add .\
+	5.2. git commit -m \'93Submitting the data model\'94\
+	5.3. git push -u secomp master\
+\
+14. Verify your Github account to see the changes.}

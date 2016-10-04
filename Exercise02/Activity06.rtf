@@ -1,0 +1,156 @@
+{\rtf1\ansi\ansicpg1252\cocoartf1348\cocoasubrtf170
+{\fonttbl\f0\fswiss\fcharset0 Helvetica;\f1\fnil\fcharset0 Monaco;}
+{\colortbl;\red255\green255\blue255;\red0\green61\blue204;\red127\green0\blue85;\red100\green100\blue100;
+\red42\green0\blue255;\red0\green0\blue192;\red106\green62\blue62;\red0\green128\blue128;\red63\green127\blue127;
+\red0\green45\blue153;}
+{\info
+{\author Pedro E. Cunha Brigatto}}\margl1440\margr1440\vieww16920\viewh10540\viewkind0
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural
+
+\f0\fs48 \cf0 Activity 06: Adding a \'91front\'92 controller to events\
+
+\fs24 \
+Pre-req 01: 
+\b Activity 05
+\b0  completed\
+\
+1. Create a new package under the base package (example: \cf2 br.com.ufscar.secomp\cf0 ), called \cf2 controllers\cf0 \
+2. Create a new class under the package \cf2 br.com.ufscar.secomp.controllers\cf0 , called \cf2 EventController\cf0 , with the following code. Save the work.\
+\
+\pard\pardeftab720
+
+\f1\fs22 \cf3 package\cf0  br.com.ufscar.secomp.devopsday.controllers;\
+\
+\cf3 import\cf0  java.util.ArrayList;\
+\cf3 import\cf0  java.util.List;\
+\
+\cf3 import\cf0  org.springframework.beans.factory.annotation.Autowired;\
+\cf3 import\cf0  org.springframework.http.HttpStatus;\
+\cf3 import\cf0  org.springframework.http.ResponseEntity;\
+\cf3 import\cf0  org.springframework.web.bind.annotation.RequestBody;\
+\cf3 import\cf0  org.springframework.web.bind.annotation.RequestMapping;\
+\cf3 import\cf0  org.springframework.web.bind.annotation.RequestMethod;\
+\cf3 import\cf0  org.springframework.web.bind.annotation.ResponseBody;\
+\cf3 import\cf0  org.springframework.web.bind.annotation.RestController;\
+\
+\cf3 import\cf0  br.com.ufscar.secomp.devopsday.model.Event;\
+\cf3 import\cf0  br.com.ufscar.secomp.devopsday.repositories.EventRepository;\
+\
+\pard\pardeftab720
+\cf4 @RestController\cf0 \
+\cf4 @RequestMapping\cf0  (path = \cf5 "/\{user_id\}"\cf0 )\
+\pard\pardeftab720
+\cf3 public\cf0  \cf3 class\cf0  EventController \{\
+	\
+	\cf4 @Autowired\cf0 \
+	\cf3 private\cf0  EventRepository \cf6 eventRepository\cf0 ;\
+	\
+	\cf4 @RequestMapping\cf0  (path = \cf5 "/event"\cf0 , method = RequestMethod.\cf6 POST\cf0 )\
+	\cf4 @ResponseBody\cf0 \
+	\cf3 public\cf0  ResponseEntity<Event> saveEvent(\cf4 @RequestBody\cf0  Event \cf7 event\cf0 ) \{\
+		Event \cf7 eventSaved\cf0  = \cf6 eventRepository\cf0 .save(\cf7 event\cf0 );\
+		\cf3 return\cf0  \cf3 new\cf0  ResponseEntity<Event>(\cf7 eventSaved\cf0 , HttpStatus.\cf6 CREATED\cf0 );\
+	\}\
+	\
+	\cf4 @RequestMapping\cf0  (path = \cf5 "/event"\cf0 , method = RequestMethod.\cf6 GET\cf0 )\
+	\cf3 public\cf0  ResponseEntity<?> listAllEvents() \{\
+		List<Event> \cf7 events\cf0  = \cf3 new\cf0  ArrayList<>();\
+		loadEventsIntoList(\cf7 events\cf0 , \cf6 eventRepository\cf0 .findAll());\
+		\cf3 return\cf0  \cf3 new\cf0  ResponseEntity<>(\cf7 events\cf0 , HttpStatus.\cf6 OK\cf0 );\
+	\}\
+	\
+	\cf3 private\cf0  List<Event> loadEventsIntoList(List<Event> \cf7 listToFill\cf0 , Iterable<Event> \cf7 events\cf0 ) \{\
+		\cf3 for\cf0  (Event \cf7 eachEvent\cf0  : \cf7 events\cf0 ) \{\
+			\cf7 listToFill\cf0 .add(\cf7 eachEvent\cf0 );\
+		\}\
+		\cf3 return\cf0  \cf7 listToFill\cf0 ;\
+	\}\
+\}
+\f0\fs24 \
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural
+\cf0 \
+3. Modify the file 
+\b pom.xml
+\b0  of the project, adding the following dependency. Save the work.\
+\
+\pard\pardeftab720
+
+\f1\fs22 \cf0         \cf8 <\cf9 dependency\cf8 >\cf0 \
+        	\cf8 <\cf9 groupId\cf8 >\cf0 com.fasterxml.jackson.datatype\cf8 </\cf9 groupId\cf8 >\cf0 \
+        	\cf8 <\cf9 artifactId\cf8 >\cf0 \ul \ulc0 jackson\ulnone -\ul datatype\ulnone -jsr310\cf8 </\cf9 artifactId\cf8 >\cf0 \
+        	\cf8 \ul \ulc8 <\cf9 \ulc9 version\cf8 \ulc8 >\cf0 \ulc0 2.8.2\cf8 \ulc8 </\cf9 \ulc9 version\cf8 \ulc8 >\cf0 \ulnone \
+        \cf8 </\cf9 dependency\cf8 >
+\f0\fs24 \cf0 \
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural
+\cf0 \
+4. Modify the classes Event, Session and Registration, all from the model, adding the following annotations to all the getter methods of the attributes which type is \cf10 java.time.LocalDateTime\cf0 : \
+\
+\pard\pardeftab720
+
+\f1\fs22 \cf0 	\cf4 @DateTimeFormat\cf0  (iso = \cf4 DateTimeFormat\cf0 .ISO.\cf6 DATE_TIME\cf0 )\
+	\cf4 @JsonDeserialize\cf0  (using = LocalDateTimeDeserializer.\cf3 class\cf0 )\
+	\cf4 @JsonSerialize\cf0  (using = LocalDateTimeSerializer.\cf3 class\cf0 )
+\f0\fs24 \
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural
+\cf0 \
+Example (getter of the attribute startingTime, of the class Session): \
+\
+\pard\pardeftab720
+
+\f1\fs22 \cf0 	\cf4 @DateTimeFormat\cf0  (iso = \cf4 DateTimeFormat\cf0 .ISO.\cf6 DATE_TIME\cf0 )\
+	\cf4 @JsonDeserialize\cf0  (using = LocalDateTimeDeserializer.\cf3 class\cf0 )\
+	\cf4 @JsonSerialize\cf0  (using = LocalDateTimeSerializer.\cf3 class\cf0 )\
+	\cf3 public\cf0  LocalDateTime getStartingTime() \{\
+		\cf3 return\cf0  \cf6 startingTime\cf0 ;\
+	\}
+\f0\fs24 \
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural
+\cf0 \
+5. From all the repository interfaces (under the \cf10 package br.ufscar.secomp.devops.repositories\cf0 ), remove all the annotations and keep only the interface. \
+\
+Example:\
+\
+\pard\pardeftab720
+
+\f1\fs22 \cf3 package\cf0  br.com.ufscar.secomp.devopsday.repositories;\
+\
+\cf3 import\cf0  org.springframework.data.repository.PagingAndSortingRepository;\
+\
+\cf3 import\cf0  br.com.ufscar.secomp.devopsday.model.Attendee;\
+\
+\cf3 public\cf0  \cf3 interface\cf0  AttendeeRepository \cf3 extends\cf0  PagingAndSortingRepository<Attendee, Long> \{\
+	\
+	Attendee findDistinctByName (String \cf7 name\cf0 );\
+\}\
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural
+
+\f0\fs24 \cf0 \
+6. Run the application (select the project under Project Explorer, right click the button and select 
+\b Run As
+\b0  > 
+\b Spring Boot App
+\b0 )\
+\
+7. From the terminal or the browser, test the application by saving an event and listing all events, respectively. \
+\
+Example using 
+\b curl
+\b0 : \
+\
+Posting an event: \
+\
+\pard\pardeftab720
+
+\f1\fs22 \cf0 curl -i -X POST -H "Content-Type:application/\ul json\ulnone " -d '\{"name":"SECOMP","description":"SECOMP","firstDay":"2016-01-01T10:24","lastDay":"2016-01-01T10:24","sessions":[\{"title":"Spring Data","description":"Spring Data","startingTime":"2016-01-01T10:24","endingTime":"2016-01-01T10:24","speaker":\{"name":"\ul Pedro\ulnone ","miniBio":"\ul Pedro\ulnone  from \ul Avaya\ulnone "\}\}]\}' http://localhost:8080/secomp/event
+\f0\fs24 \
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural
+\cf0 \
+Listing all the events: \
+\
+\pard\pardeftab720
+
+\f1\fs22 \cf0 curl http://localhost:8080/secomp/event
+\f0\fs24 \
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural
+\cf0 \
+}

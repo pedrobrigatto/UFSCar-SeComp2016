@@ -1,0 +1,156 @@
+Another repository 
+
+Pre-req 01: Git CLI installed (example: Git Bash)
+Pre-req 02: Maven installed
+Pre-req 03: Heroku CLI installed
+Pre-req 04: Eclipse IDE installed 
+Pre-req 05: JDK installed (JDK-8)
+Pre-req 06: GitHub account
+
+1. Complete activity 01
+2. Complete activity 02
+3. Complete activity 03
+4. Complete activity 04
+5. Complete activity 05
+6. Complete activity 06
+
+7. Sign in to https://travis-ci.org using your GitHub account
+8. Synchronize your Travis-CI account (this will refresh the page all your GitHub repositories)
+9. Activate the toggle of the repository created in the exercises above
+10. Go to the repository using a web browser, in your GitHub account, then select 'Settings' > 'Integration & services' and see Travis is already configured for it
+
+11. Create a Heroku account (heroku.com)
+12. Create an application in Heroku (this is going to be our production application)
+13. Create a SonarQube account at sonarqube.com 
+14. In your SonarQube account, generate a new token (give any name then generate the token and take note of it)
+	Example: to the key 'secomp-baseapp-token', the following token was generated: '4c21556767a23cd9e7f4bfa43939cf58f8eff747'
+	
+15. Encrypt this token using the following command: travis encrypt SONAR_TOKEN=4c21556767a23cd9e7f4bfa43939cf58f8eff747  (using Git Bash in Windows, for example)
+
+	To encrypt the key, use the travis command line interface like this: travis encrypt SONAR_TOKEN=<sonar_secret_value_from_token>
+		* The key '<sonar_secret_value_from_token>' is the one generated in step 14
+	
+	Example of encrypted key generated to me: "GuGGI2l/mGEyIHEDxPIak2n7l8Wtl6NVo9bEfSLBA0z2zIU3MjgmTEsxyzw6Vv5eR6j01I+XmCs4v53P8SPj9NLW3FjWioo0t+ytJvO0BPP61oc6aZVXV8EAV6Z/YYPY+PdTYH9IuDev8JMr57wrpGNEA7qiUUv7PkyPcDjmO1nMwjK3/JkF3u6HiNqhcr2arEgcic/Hfp0xi2Mmz8QxslnZz3TSPgcmEsLeW4RkmhmoYB6RNfnPT3L1hprkmE4kSGB3ys8e55cMRSxEwGfsYdpCp0MI3NyGNSPARsZDEYTGVwr/SI0NYdOc2KUTo6AKk9HJtGYNPmTapxy16wQ2n6jifMScMBxYIL4OBytdDp5wHBEKhkRDMV8qQQ/gTmbETAfCN3ht2wU64KBZDMZ8dTG6c99qmnVq5jQmb/dJUQxV9RLnwsoKb4W6AejeP9k9RZbYg+necp4aqNI6TFUYWTwgAfMNZbteE6PENmw6k9WJSmWSGnJ/euaxqGHLDvEvDfMFvG3Utkk1kwpdXAlPeIL8yDsd4FA/YjrGAG0ThXJRfNznRsrffPqmfHCifp7bW4r4hUHgU77gsrZ4QBpcz1f3pZG/h3SQKR6a+lESWlk7eV92bTjsbEU8n0pDcqY3t3fWscCtU70nlWLcJgrgmFiH7oGW9GB33jG0Y2sRrY8="
+
+16. Add a file called '.travis.yml' in the project's root directory
+17. Edit this file, .travis.yml, with the following content (notice that we are using this encrypted key to configure sonar integration with travis):
+
+	# According to https://docs.travis-ci.com/user/languages/java/
+	language: java
+
+	jdk:
+	  - oraclejdk8
+
+	addons:
+	  sonarqube: true
+	env:
+	  global:
+		# in this case, the key below is the result of an encryption of the env variable SONAR_TOKEN=b96c4252d8c5e65ee93cdd9d7124be3b0f412502
+		- secure: "GuGGI2l/mGEyIHEDxPIak2n7l8Wtl6NVo9bEfSLBA0z2zIU3MjgmTEs9Lt36Vv5eR6j01I+XmCs4v53P8SPj9NLW3FjWioo0t+ytJvO0BPP61oc6aZVXV8EAV6Z/YYPY+PdTYH9IuDev8JMr57wrpGNEA7qiUUv7PkyPcDjmO1nMwjK3/JkF3u6HiNqhcr2arEgcic/Hfp0xi2Mmz8QxslnZz3TSPgcmEsLeW4RkmhmoYB6RNfnPT3L1hprkmE4kSGB3ys8e55cMRSxEwGfsYdpCp0MI3NyGNSPARsZDEYTGVwr/SI0NYdOc2KUTo6AKk9HJtGYNPmTapxy16wQ2n6jifMScMBxYIL4OBytdDp5wHBEKhkRDMV8qQQ/gTmbETAfCN3ht2wU64KBZDMZ8dTG6c99qmnVq5jQmb/dJUQxV9RLnwsoKb4W6AejeP9k9RZbYg+necp4aqNI6TFUYWTwgAfMNZbteE6PENmw6k9WJSmWSGnJ/euaxqGHLDvEvDfMFvG3Utkk1kwpdXAlPeIL8yDsd4FA/YjrGAG0ThXJRfNznRsrffPqmfHCifp7bW4r4hUHgU77gsrZ4QBpcz1f3pZG/h3SQKR6a+lESWlk7eV92bTjsbEU8n0pDcqY3t3fWscCtU70nlWLcJgrgmFiH7oGW9GB33jG0Y2sRrY8="
+	script:
+	  # other script steps might be done before running the actual SonarQube analysis
+	  - sonar-scanner -Dsonar.login=$SONAR_TOKEN
+	  
+18. Create a sonar-project.properties in the project root directory and configure it following this reference: http://redirect.sonarsource.com/doc/install-configure-scanner.html
+	Example of sonar-project.properties: 
+	
+	# must be unique in a given SonarQube instance
+	sonar.projectKey=br.ufscar.secomp.devopsday:ufscar_secomp_2016_base
+	# this is the name and version displayed in the SonarQube UI. Was mandatory prior to SonarQube 6.1.
+	sonar.projectName=ufscar_secomp_2016_base
+	sonar.projectVersion=0.1.0
+	 
+	# Path is relative to the sonar-project.properties file. Replace "\" by "/" on Windows.
+	# Since SonarQube 4.2, this property is optional if sonar.modules is set. 
+	# If not set, SonarQube starts looking for source code from the directory containing 
+	# the sonar-project.properties file.
+	sonar.sources=src/main/java
+	 
+	# Encoding of the source code. Default is default system encoding
+	sonar.sourceEncoding=UTF-8
+
+19. Configure your .travis.yml file to add sonarqube to the build
+	To do this, look at the content of the file .travis.yml described in step 17. The section below has to be updated to use the encrypted key you generated in step 15, 
+	instead of the one mentioned in the step. 
+	
+		addons:
+		  sonarqube: true
+		env:
+		  global:
+			# in this case, the key below is the result of an encryption of the env variable SONAR_TOKEN=b96c4252d8c5e65ee93cdd9d7124be3b0f412502
+			- secure: "GuGGI2...+lESWlk7eV92bTjsbEU8n0pDcqY3t3fWscCtU70nlWLcJgrgmF="
+	
+20. Commit everything and push to github 
+
+	git add . 
+	git commit -m "Adding Travis-CI and SonarQube configuration"
+
+21. Create a new heroku application (the one to be the staging app) and create a new pipeline to include this app ... as staging!
+22. Associate our github repository to this application
+23. Enable automatic deploys (happening whenever something is pushed to the master branch)
+24. Also, say CI must finish - gracefully - before deployment happens
+25. Save the work.
+
+26. Create another heroku application (the one to be the production app)
+27. Associate this application to the same pipeline as the first one (the staging app)
+28. In the pipeline, promote the staging app to production 
+30. Go to the pipeline and enable review apps
+31. Enable review apps, creating the app.json file and commit this app.json to the repository (github repository, should be)
+32. Check the option 'Create new review apps for new pull requests automatically' and click on 'Enable'
+33. Create a branch to make changes to any file ... 
+34. Commit the changes to the branch instead of master
+35. Since we don't have too much time, we're gonna do this procedure of pull requests through the web interface
+	Via command line, we can do the same using hub (git command-line wrapper available at https://github.com/github/hub)
+	(reference: http://stackoverflow.com/questions/4037928/can-you-issue-pull-requests-from-the-command-line-on-github)
+	Instead of committing a change to the master branch, create new branch and make a pull request. 
+	Later, merge the pull request
+	
+	How is that useful ? We can review some changes before merging them with the code in the master, for example. Live.
+	Once we merge to the master, then staging is built, review app is destroyed. 
+	And we can finally promote the version to production if everything is fine. 
+	  
+	Terminology/convention (to use as suffixes to put names to the Heroku applications): 
+	
+		. prod - production 
+		. staging - staging application 
+		. dev - development
+
+36. Associate your repository (created in the 6 documents of the exercise) to this application
+37. Make sure you take notes about the URL of the application (in runtime) -> go the 'Settings' tab to find it
+38. From the application, create a new pipeline in Heroku and associate your application to it
+39. Enable automatic deploys, and say the deployment has to happen only if CI is done (waiting for CI to pass before deploy) - commits to master
+40. Save the work, commit new stuff to the repo and see things happening. 
+
+Extra: if the integration between Travis-CI and Heroku does not work automatically, there are some additional steps that have to be considered. 
+They are documented in this page: https://docs.travis-ci.com/user/deployment/heroku. Basically, we have to set the .travis.yml with information (key and application name)
+of the target Heroku application. In short:
+
+	40.1. Go to the project root directory (the Spring Data project created in the 6 documents of the beginning of the tutorial)
+	40.2. To generate the key and let it be written to the .travis.yml file, from the project root directory, run the command below:
+
+		travis encrypt $(heroku auth:token) --add deploy.api_key
+		
+		This comment integrates both command line interfaces, Heroku's and Travis-CI's ones, to configure the communication between them properly.
+		
+	40.3. Add, commit and push the changes to the GitHub repository
+	
+		git add . 
+		git commit -m "Heroku and Travis-CI integration settings"
+		git push -u origin master
+
+---------------------------------------------------------------------------------------------------------------------------------------------------
+References: 
+
+	- https://www.youtube.com/watch?v=_tiecDrW6yY
+	- https://docs.travis-ci.com/user/languages/java/
+	- https://docs.travis-ci.com/user/deployment/heroku
+	- https://docs.travis-ci.com/user/sonarqube/
+	- Heroku pipelines: https://blog.heroku.com/heroku_flow_pipelines_review_apps_and_github_sync
+	- Heroku pipelines: https://www.heroku.com/continuous-delivery
+	- Travis-CI encryption keys: https://docs.travis-ci.com/user/encryption-keys/#Usage
+	- Heroku command line usage: https://devcenter.heroku.com/articles/using-the-cli#app-commands
+	- https://devcenter.heroku.com/articles/procfile)
+	- https://devcenter.heroku.com/articles/pipelines-using-the-platform-api
+---------------------------------------------------------------------------------------------------------------------------------------------------
+	
+	
