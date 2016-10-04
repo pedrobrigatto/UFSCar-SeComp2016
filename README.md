@@ -1,9 +1,9 @@
 # SeComp VII - UFSCar - 29/07/2016
 
-- DevOps
-  . Dev - Development
-  . Ops - Operations
-  
+DevOps
+  - Dev - Development
+  - Ops - Operations
+
 Repositórios de referência: 
 
 - Exercício 1: https://github.com/pedrobrigatto/ufscar_secomp_2016_exercise01
@@ -30,3 +30,6 @@ Processos principais:
 
 Openshift visto como uma plataforma oferecida como serviço. Opção para quem quer estabelecer sua infraestrutura na nuvem.
 Importância de uma boa interface de linha de comando, em substituição ao modelo gráfico de gerenciamento (GUI). Ferramentas vistas e usadas para ferramentas/plataformas como Maven, Git, Openshift (rhc), Travis-CI e Heroku.
+
+Travis-CI command line interface (CLI) is the one that requires more effort from us. See at:  
+https://github.com/travis-ci/travis.rb#installation
